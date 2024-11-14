@@ -78,3 +78,5 @@ C:\Users\ender\source\repos\IoonSistema\obj\Debug\net7.0\IoonSistema.pdb
 C:\Users\ender\source\repos\IoonSistema\obj\Debug\net7.0\IoonSistema.genruntimeconfig.cache
 C:\Users\ender\source\repos\IoonSistema\obj\Debug\net7.0\ref\IoonSistema.dll
 C:\Users\ender\source\repos\IoonSistema\bin\Debug\net7.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\ender\source\repos\IoonSistema\bin\Debug\net7.0\Microsoft.AspNetCore.Cryptography.Internal.dll
+C:\Users\ender\source\repos\IoonSistema\bin\Debug\net7.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll

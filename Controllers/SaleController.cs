@@ -75,6 +75,7 @@ namespace IoonSistema.Controllers
             }
         }
 
+
         // DELETE api/sale/{id}
         [HttpDelete("{id}")]
         public IActionResult DeleteSale(Guid id)

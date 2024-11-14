@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using IoonSistema;
+using Microsoft.AspNetCore.Authorization;
 
 namespace IoonSistema.Controllers
 {
@@ -83,6 +84,7 @@ namespace IoonSistema.Controllers
             }
         }
 
+        [Authorize]
         // DELETE api/state/{id}
         [HttpDelete("{id}")]
         public IActionResult DeleteState(Guid id)

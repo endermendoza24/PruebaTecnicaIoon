@@ -1,49 +1,42 @@
-﻿using IoonSistema.Services;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Mvc;
+using IoonSistema;
 using Microsoft.Data.SqlClient;
 using Dapper;
+using System.Linq;
 
 namespace IoonSistema.Controllers
 {
-    [ApiController]
     [Route("api/[controller]")]
+    [ApiController]
     public class AuthController : ControllerBase
     {
         private readonly AuthService _authService;
-        private readonly IConfiguration _configuration;
+        private readonly Database _database;
 
-        // Definir el GUID correspondiente al estado "Active"
-        private readonly Guid ActiveStateId = new Guid("BAD80CC4-07DF-446D-94FA-93445188BEE3");
-
-        public AuthController(AuthService authService, IConfiguration configuration)
+        public AuthController(AuthService authService, Database database)
         {
             _authService = authService;
-            _configuration = configuration;
+            _database = database;
         }
 
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginRequest loginRequest)
         {
-            using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+            // Conectar a la base de datos y verificar las credenciales
+            using (var connection = _database.GetConnection())
             {
-                // Buscar al usuario por su nombre de usuario
-                var user = connection.QueryFirstOrDefault<User>("SELECT * FROM Users WHERE Username = @Username", new { Username = loginRequest.Username });
+                var user = connection.QueryFirstOrDefault<User>(
+                    "SELECT * FROM Users WHERE Username = @Username",
+                    new { Username = loginRequest.Username });
 
+                // Verificar si el usuario existe y si la contraseña es correcta
                 if (user == null || user.Password != loginRequest.Password)
                 {
-                    return Unauthorized("Usuario o contraseña incorrectos");
+                    return Unauthorized("Invalid credentials");
                 }
 
-                // Verificar que el estado del usuario sea "Active"
-                if (user.State != ActiveStateId)
-                {
-                    return Unauthorized("El usuario no está activo");
-                }
-
-                // Generar el JWT
-                var token = _authService.GenerateJwtToken(user.UserId, user.Role);
+                // Genera el token JWT
+                var token = _authService.GenerateJwtToken(loginRequest.Username, user.Role);
 
                 return Ok(new { Token = token });
             }
